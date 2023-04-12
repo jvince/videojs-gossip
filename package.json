@@ -1,0 +1,30 @@
+{
+  "name": "videojs-gossip",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "build:watch": "npm run build -- --watch",
+    "serve": "wds --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "video.js": "^8"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.0.0",
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@web/dev-server": "^0.1.38",
+    "@web/dev-server-rollup": "^0.4.1",
+    "rollup": "^3.20.2",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.4"
+  }
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="node_modules/video.js/dist/video-js.css" rel="stylesheet">
+</head>
+
+<body>
+  <video id="video" class="video-js vjs-default-skin" controls>
+    <source src="//vjs.zencdn.net/v/oceans.mp4" type='video/mp4'>
+    <source src="//vjs.zencdn.net/v/oceans.webm" type='video/webm'>
+  </video>
+
+  <script src="node_modules/video.js/dist/video.js"></script>
+  <script src="out/videojs-gossip.js"></script>
+
+  <script>
+    (function (window, videojs) {
+      var player = window.examplePlayer = videojs('video');
+      console.log(`has plugin: ${player.hasPlugin('gossip')}`);
+      var plugin = window.contribBackbite = player.gossip();      
+    }(window, window.videojs));
+  </script>
+</body>
+
+</html>
