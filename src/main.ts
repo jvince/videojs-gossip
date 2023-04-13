@@ -3,6 +3,12 @@ import { v4 as uuid } from 'uuid';
 import videojs from 'video.js';
 import Player from 'video.js/dist/types/player';
 
+export type Id = string;
+
+export interface Identifiable {
+  id: Id;
+}
+
 type Metadata = {
   author: string;
   created: number;
@@ -25,34 +31,22 @@ function toUnixTimestamp(date: Date) {
 
 class IntervalDataTree<T extends IntervalData<Identifiable, N>, N extends IntervalType = number> extends IntervalTree<T, N> {
 
-  private cache = new Map<Identifiable['id'], T>();
-
-  override insert(record: T): boolean {
-    const inserted = super.insert(record);
-
-    if (inserted) {
-      this.cache.set(record.data.id, record);
-    }
-
-    return inserted;
-  }
-
   override remove(record?: T): boolean {
-    if (!record) {
-      return false;
-    }
+      if (!record) {
+        return false;
+      }
 
-    const removed = super.remove(record);
-
-    if (removed) {
-      this.cache.delete(record.data.id);
-    }
-
-    return removed;
+      return super.remove(record);
   }
 
   findRecord(id: string): T | undefined {
-    return this.cache.get(id);
+    for (const record of this.preOrder()) {
+      if (record.data.id === id) {
+        return record;
+      }
+    }
+
+    return undefined;
   }
 
 }
