@@ -23,8 +23,6 @@ export default defineConfig({
   plugins: [
     nodeResolve(),
     commonjs(),
-    typescript({
-      resolveJsonModule: true
-    })
+    typescript()
   ]
 });
