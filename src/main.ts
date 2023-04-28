@@ -1,102 +1,60 @@
-import { Interval, IntervalTree } from 'node-interval-tree';
-import { v4 as uuid } from 'uuid';
 import videojs from 'video.js';
 import Player from 'video.js/dist/types/player';
+import { TopicState, TopicData } from './topicState';
+import { Identifiable, Plugin } from './types';
 
-export type Id = string;
-
-export interface Identifiable {
-  id: Id;
+interface PluginState {
+  initialized: boolean;
 }
 
-type Metadata = {
-  author: string;
-  created: number;
+const defaultPluginState: PluginState = {
+  initialized: false
 }
 
-interface Topic<Metadata> {
-  id: Id,
-  metadata: Metadata
+const PluginBase = videojs.getPlugin('plugin') as Plugin<PluginState>;
+
+// const ComponentBase = videojs.getComponent('Component') as Ctor<typeof Component> & Component;
+
+// const Button = videojs.getComponent('Button') as Ctor<typeof ButtonComponent> & ButtonComponent;
+
+interface PluginOptions<TopicMetadata extends Identifiable> {
+  topics?: TopicData<TopicMetadata>[]
 }
 
-type IntervalType = number | bigint;
+class GossipPlugin<TopicMetadata extends Identifiable> extends PluginBase {
 
-interface IntervalData<T extends Identifiable, N extends IntervalType = number> extends Interval<N> {
-  data: T;
-}
+  static VERSION = '0.0.1';
 
-function toUnixTimestamp(date: Date) {
-  return Math.floor(date.getTime() / 1000);
-}
+  static defaultState: PluginState = defaultPluginState;
 
-class IntervalDataTree<T extends IntervalData<Identifiable, N>, N extends IntervalType = number> extends IntervalTree<T, N> {
+  private topics: TopicState<TopicMetadata> = new TopicState();
 
-  override remove(record?: T): boolean {
-      if (!record) {
-        return false;
-      }
+  constructor(player: Player, options: PluginOptions<TopicMetadata>) {
+    super(player, options);
 
-      return super.remove(record);
-  }
-
-  findRecord(id: string): T | undefined {
-    for (const record of this.preOrder()) {
-      if (record.data.id === id) {
-        return record;
-      }
+    if (options.topics) {
+      this.topics.populate(options.topics)
     }
-
-    return undefined;
-  }
-
-}
-
-const tree = new IntervalDataTree<IntervalData<Topic<Metadata>>>();
-tree.insert({ low: 0.5, high: 10, data: { id: '101', metadata: { author: 'Pera Peric', created: toUnixTimestamp(new Date()) } } });
-tree.insert({ low: 5.1, high: 15.1, data: { id: uuid(), metadata: { author: 'Zoka Zokic', created: toUnixTimestamp(new Date()) } } });
-tree.insert({ low: 1.0, high: 1.5, data: { id: uuid(), metadata: { author: 'Mika Mikic', created: toUnixTimestamp(new Date()) } } });
-tree.insert({ low: 12.2, high: 13.1, data: { id: uuid(), metadata: { author: 'Mika Mikic', created: toUnixTimestamp(new Date()) } } });
-tree.insert({ low: 6.1, high: 18.5, data: { id: uuid(), metadata: { author: 'Mika Mikic', created: toUnixTimestamp(new Date()) } } });
-
-
-console.log(tree.count);
-tree.remove(tree.findRecord('101'));
-console.log(tree.count);
-
-const BasePlugin = videojs.getPlugin('plugin') as any;
-
-class Gossip extends BasePlugin {
-
-  constructor(player: Player) {
-    super(player);
-    console.log(this);
 
     this.on(player, 'timeupdate', () => {
       const currentTime = this.player.currentTime();
       console.log(`current time: ${currentTime}`);
-      console.log(tree.search(currentTime, currentTime))
+      console.log(this.topics.findInRange(currentTime));
     });
-  }
 
-  dispose() {
-    super.dispose();
-  }
-
-  updateState() {
-    this.setState({ playing: !this.player.paused() });
-  }
-
-  logState() {
-    this.log(`the player is now ${this.state.playing ? 'playing' : 'paused'}`);
+    this.on(player, 'loadedmetadata', () => {
+    });
   }
 
 }
 
-Gossip.defaultState = {};
+interface TopicMetadata {
+  id: string;
+  title: string;
+  author: string;
+}
 
-Gossip.VERSION = '0.0.1';
+videojs.registerPlugin('gossip', GossipPlugin<TopicMetadata>);
 
-videojs.registerPlugin('gossip', Gossip);
-
-export default Gossip;
+export default GossipPlugin;
 

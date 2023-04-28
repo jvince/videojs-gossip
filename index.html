@@ -18,11 +18,21 @@
   <script src="node_modules/video.js/dist/video.js"></script>
   <script src="out/videojs-gossip.js"></script>
 
-  <script>
+  <script type="module">
+    import { v4 as uuidv4 } from '/node_modules/uuid/dist/esm-browser/index.js';
+
     (function (window, videojs) {
       var player = window.examplePlayer = videojs('video');
       console.log(`has plugin: ${player.hasPlugin('gossip')}`);
-      var plugin = window.contribBackbite = player.gossip();      
+      var plugin = window.gossip = player.gossip({
+        topics: [
+          { low: 0.5, high: 10, data: { id: uuidv4(), metadata: { author: 'Pera Peric', created: new Date() } } },
+          { low: 5.1, high: 15.1, data: { id: uuidv4(), metadata: { author: 'Zoka Zokic', created: new Date() } } },
+          { low: 1.0, high: 1.5, data: { id: uuidv4(), metadata: { author: 'Mika Mikic', created: new Date() } } },
+          { low: 12.2, high: 13.1, data: { id: uuidv4(), metadata: { author: 'Mika Mikic', created: new Date() } } },
+          { low: 6.1, high: 18.5, data: { id: uuidv4(), metadata: { author: 'Mika Mikic', created: new Date() } } }
+        ]
+      });
     }(window, window.videojs));
   </script>
 </body>
