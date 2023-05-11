@@ -13,6 +13,11 @@
   "author": "",
   "license": "MIT",
   "peerDependencies": {
+    "clsx": "^1.2.1",
+    "lodash": "^4",
+    "react-dom": "^18",
+    "react-icons": "^4.8.0",
+    "react": "^18",
     "video.js": "^8"
   },
   "devDependencies": {
@@ -20,11 +25,15 @@
     "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-terser": "^0.4.1",
     "@rollup/plugin-typescript": "^11.1.0",
+    "@types/lodash": "^4.14.194",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.1",
     "@types/uuid": "^9.0.1",
-    "@web/dev-server": "^0.1.38",
-    "@web/dev-server-rollup": "^0.4.1",
-    "rollup": "^3.20.2",
+    "@web/dev-server": "^0.2.1",
+    "@web/dev-server-rollup": "^0.5.0",
+    "rollup": "^3.21.3",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4"
   },

@@ -11,6 +11,8 @@ export interface Ctor<T extends new (...args: any) => any> {
   new (...args: ConstructorParameters<T>): InstanceType<T>;
 }
 
+export type VjsComponent<T extends new (...args: any) => any, K> = Ctor<T> & K;
+
 export interface PluginCtor<T> {
   new (player: Player, options: any): Plugin<T> & VideojsPlugin;
 }

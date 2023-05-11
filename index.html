@@ -7,6 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link href="node_modules/video.js/dist/video-js.css" rel="stylesheet">
+  <script>
+    let NODE_ENV = location.hostname === "localhost" ? null : "test";
+    NODE_ENV = location.hostname.startsWith("www") ? "production" : NODE_ENV;
+    window.process = { env: { NODE_ENV } };
+  </script>
+  <script src="/node_modules/lodash/lodash.min.js"></script>
+  <script src="/node_modules/clsx/dist//clsx.min.js"></script>
+  <script src="/node_modules/react/umd/react.development.js"></script>
+  <script src="/node_modules/react-dom/umd/react-dom.development.js"></script>
 </head>
 
 <body>

@@ -1,21 +1,21 @@
 import videojs from 'video.js';
 import Player from 'video.js/dist/types/player';
-import { TopicState, TopicData } from './topicState';
+import './components/Button';
+import './components/VjsGossip';
+import { TopicData, TopicState } from './topicState';
 import { Identifiable, Plugin } from './types';
 
 interface PluginState {
+  isAnnotationMode: boolean;
   initialized: boolean;
 }
 
 const defaultPluginState: PluginState = {
+  isAnnotationMode: false,
   initialized: false
 }
 
 const PluginBase = videojs.getPlugin('plugin') as Plugin<PluginState>;
-
-// const ComponentBase = videojs.getComponent('Component') as Ctor<typeof Component> & Component;
-
-// const Button = videojs.getComponent('Button') as Ctor<typeof ButtonComponent> & ButtonComponent;
 
 interface PluginOptions<TopicMetadata extends Identifiable> {
   topics?: TopicData<TopicMetadata>[]
@@ -33,22 +33,39 @@ class GossipPlugin<TopicMetadata extends Identifiable> extends PluginBase {
     super(player, options);
 
     if (options.topics) {
-      this.topics.populate(options.topics)
+      this.topics.populate(options.topics);
     }
 
     this.on(player, 'timeupdate', () => {
-      const currentTime = this.player.currentTime();
-      console.log(`current time: ${currentTime}`);
-      console.log(this.topics.findInRange(currentTime));
+      // const currentTime = this.player.currentTime();
+      // console.log(`current time: ${currentTime}`);
+      // console.log(this.topics.findInRange(currentTime));
     });
 
-    this.on(player, 'loadedmetadata', () => {
+    this.on('statechanged', ({ changes }: any) => {
+      console.log(changes);
+
+      if (changes?.isAnnotationMode && changes.isAnnotationMode.to) {
+        player.addChild('VjsGossipComponent', { plugin: this });
+      }
+
+      if (changes?.isAnnotationMode && !changes?.isAnnotationMode?.to) {
+        const component = player.getChild('VjsGossipComponent');
+
+        if (component) {
+          player.removeChild(component);
+        }
+      }
+    });
+
+    player.getChild('ControlBar')?.addChild('VjsGossipButton', {
+      plugin: this
     });
   }
 
 }
 
-interface TopicMetadata {
+export interface TopicMetadata {
   id: string;
   title: string;
   author: string;
