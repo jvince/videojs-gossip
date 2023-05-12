@@ -17,7 +17,7 @@ function VjsComponentBridgeProvider({ bridge, children }: VjsComponentBridgeProv
   const player = useRef(bridge.player());
 
   const context = useMemo<VjsComponentBridgeContextValue>(() => ({
-    player: player.current
+    player: player.current,
   }), []);
 
   return (

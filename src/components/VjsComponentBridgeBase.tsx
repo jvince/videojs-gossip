@@ -3,14 +3,15 @@ import { Root, createRoot } from 'react-dom/client';
 import videojs from 'video.js';
 import Component from 'video.js/dist/types/component';
 import Player from 'video.js/dist/types/player';
-import { VjsComponent } from '../types';
+import { Plugin, VjsComponent } from '../types';
 
 const VjsComponentBase = videojs.getComponent('Component') as VjsComponent<typeof Component, Component>;
 
-export interface VjsComponentBridgeOptions {
+export interface VjsComponentBridgeOptions<T extends Plugin<any> = Plugin<unknown>> {
   name: string;
   children?: any[];
   className?: string;
+  plugin: T
 }
 
 export type RenderFn = Root['render'];

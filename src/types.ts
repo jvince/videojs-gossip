@@ -1,6 +1,5 @@
-import VideojsPlugin from 'video.js/dist/types/plugin';
 import Player from 'video.js/dist/types/player';
-import { VjsComponentBridgeOptions } from './components/VjsComponentBridgeBase';
+import VideojsPlugin from 'video.js/dist/types/plugin';
 
 export type Id = string | number;
 
@@ -18,13 +17,13 @@ export interface PluginCtor<T> {
   new (player: Player, options: any): Plugin<T> & VideojsPlugin;
 }
 
-interface StateUpdatesFn<T> {
-  (): Partial<T>;
+interface StateUpdateFn<T> {
+  (stateUpdates: (() => Partial<T>) | Partial<T>): void
 }
 
 export interface StatfulPlugin<T> {
   state: T;
-  setState(stateUpdates: StateUpdatesFn<T> | Partial<T>): void;
+  setState: StateUpdateFn<T>
 }
 
 type EventTarget = string | [] | Element | object;
@@ -35,7 +34,3 @@ export interface EventedPlugin {
 }
 
 export type Plugin<PluginState> = PluginCtor<PluginState> & EventedPlugin & StatfulPlugin<PluginState>;
-
-export interface VjsGossipBridgeOptions<T = unknown> extends VjsComponentBridgeOptions {
-  plugin: T;
-}

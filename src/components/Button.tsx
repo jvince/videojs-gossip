@@ -3,11 +3,10 @@ import React, { useCallback } from 'react';
 import { MdModeComment } from 'react-icons/md';
 import videojs from 'video.js';
 import GossipPlugin, { TopicMetadata } from '../main';
-import { VjsGossipBridgeOptions } from '../types';
-import VjsBridgeComponentBase, { RenderFn } from './VjsComponentBridgeBase';
+import VjsBridgeComponentBase, { RenderFn, VjsComponentBridgeOptions } from './VjsComponentBridgeBase';
 import VjsComponentBridgeProvider, { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
 
-type VjsGossipButtonOptions = VjsGossipBridgeOptions<GossipPlugin<TopicMetadata>>;
+type VjsGossipButtonOptions = VjsComponentBridgeOptions<GossipPlugin<TopicMetadata>>;
 
 export type VjsGossipButtonProps = VjsGossipButtonOptions;
 
