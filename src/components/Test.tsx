@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
+import { VjsGossipComponentProps } from './VjsGossip';
 
-function Test(props: any) {
+function Test({ plugin }: VjsGossipComponentProps) {
   const handleClick = useCallback(() => {
-    console.log(props)
-    props.plugin?.setState({ isAnnotationMode: false });
-  }, [props?.plugin])
+    plugin.setState({ isAnnotationMode: false });
+  }, [plugin.setState])
 
   return (
     <div

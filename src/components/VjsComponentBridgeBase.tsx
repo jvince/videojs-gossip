@@ -8,6 +8,7 @@ import { VjsComponent } from '../types';
 const VjsComponentBase = videojs.getComponent('Component') as VjsComponent<typeof Component, Component>;
 
 export interface VjsComponentBridgeOptions {
+  name: string;
   children?: any[];
   className?: string;
 }
@@ -30,21 +31,21 @@ abstract class VjsBridgeComponentBase<Options extends VjsComponentBridgeOptions 
     this.on('dispose', () => this.unmount());
   }
 
-  abstract onMount(this: VjsBridgeComponentBase<Options>, render: RenderFn): void;
+  abstract onMount(render: RenderFn): void;
 
   protected componentName() {
     return this.constructor.name;
   }
 
-  private mount(this: VjsBridgeComponentBase<Options>) {
+  private mount() {
     this.onMount(this.root.render.bind(this.root));
   }
 
-  private unmount(this: VjsBridgeComponentBase<Options>) {
+  private unmount() {
     this.onUnmount(this.root.unmount.bind(this.root));
   }
 
-  protected onUnmount(this: VjsBridgeComponentBase<Options>, unmount: UnmountFn): void {
+  protected onUnmount(unmount: UnmountFn): void {
     unmount();
   }
 

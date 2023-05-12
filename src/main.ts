@@ -29,6 +29,8 @@ class GossipPlugin<TopicMetadata extends Identifiable> extends PluginBase {
 
   private topics: TopicState<TopicMetadata> = new TopicState();
 
+  declare state: typeof PluginBase['state'];
+
   constructor(player: Player, options: PluginOptions<TopicMetadata>) {
     super(player, options);
 
@@ -43,8 +45,6 @@ class GossipPlugin<TopicMetadata extends Identifiable> extends PluginBase {
     });
 
     this.on('statechanged', ({ changes }: any) => {
-      console.log(changes);
-
       if (changes?.isAnnotationMode && changes.isAnnotationMode.to) {
         player.addChild('VjsGossipComponent', { plugin: this });
       }

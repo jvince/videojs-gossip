@@ -2,10 +2,16 @@ import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import { MdModeComment } from 'react-icons/md';
 import videojs from 'video.js';
-import VjsBridgeComponentBase, { RenderFn, VjsComponentBridgeOptions } from './VjsComponentBridgeBase';
+import GossipPlugin, { TopicMetadata } from '../main';
+import { VjsGossipBridgeOptions } from '../types';
+import VjsBridgeComponentBase, { RenderFn } from './VjsComponentBridgeBase';
 import VjsComponentBridgeProvider, { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
 
-function Button(props: any) {
+type VjsGossipButtonOptions = VjsGossipBridgeOptions<GossipPlugin<TopicMetadata>>;
+
+export type VjsGossipButtonProps = VjsGossipButtonOptions;
+
+function Button(props: VjsGossipButtonProps) {
   const { player } = useVjsComponentBridge();
 
   const handleClick = useCallback(() => {
@@ -34,9 +40,9 @@ function Button(props: any) {
   );
 }
 
-class VjsGossipButton extends VjsBridgeComponentBase {
+class VjsGossipButton extends VjsBridgeComponentBase<VjsGossipButtonOptions> {
 
-  override onMount(this: VjsBridgeComponentBase<VjsComponentBridgeOptions>, render: RenderFn): void {
+  override onMount(render: RenderFn): void {
     render(
       <VjsComponentBridgeProvider bridge={this}>
         <Button {...this.options_} />

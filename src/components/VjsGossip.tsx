@@ -1,12 +1,18 @@
 import React from 'react';
 import videojs from 'video.js';
-import VjsBridgeComponentBase, { RenderFn } from './VjsComponentBridgeBase';
+import GossipPlugin, { TopicMetadata } from '../main';
+import { VjsGossipBridgeOptions } from '../types';
 import Test from './Test';
+import VjsBridgeComponentBase, { RenderFn } from './VjsComponentBridgeBase';
 import VjsComponentBridgeProvider from './VjsComponentBrigdeProvider';
 
-class VjsGossipComponent extends VjsBridgeComponentBase {
+type VjsGossipComponentOptions = VjsGossipBridgeOptions<GossipPlugin<TopicMetadata>>;
 
-  override onMount(this: VjsBridgeComponentBase, render: RenderFn): void {
+export type VjsGossipComponentProps = VjsGossipComponentOptions;
+
+class VjsGossipComponent extends VjsBridgeComponentBase<VjsGossipComponentOptions> {
+
+  override onMount(render: RenderFn): void {
     render(
       <VjsComponentBridgeProvider bridge={this}>
         <Test {...this.options_} />

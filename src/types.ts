@@ -1,5 +1,6 @@
 import VideojsPlugin from 'video.js/dist/types/plugin';
 import Player from 'video.js/dist/types/player';
+import { VjsComponentBridgeOptions } from './components/VjsComponentBridgeBase';
 
 export type Id = string | number;
 
@@ -34,3 +35,7 @@ export interface EventedPlugin {
 }
 
 export type Plugin<PluginState> = PluginCtor<PluginState> & EventedPlugin & StatfulPlugin<PluginState>;
+
+export interface VjsGossipBridgeOptions<T = unknown> extends VjsComponentBridgeOptions {
+  plugin: T;
+}
