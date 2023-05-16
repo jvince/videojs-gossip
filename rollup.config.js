@@ -18,7 +18,8 @@ const output = {
     'video.js': 'videojs'
   },
   interop: 'compat',
-  sourcemap: true
+  sourcemap: true,
+  exports: 'named'
 };
 
 export default defineConfig({
