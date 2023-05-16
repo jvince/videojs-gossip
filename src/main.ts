@@ -73,5 +73,7 @@ export interface TopicMetadata {
 
 videojs.registerPlugin('gossip', GossipPlugin<TopicMetadata>);
 
+export { PluginBase };
+
 export default GossipPlugin;
 

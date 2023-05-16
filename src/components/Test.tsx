@@ -1,10 +1,13 @@
 import React, { useCallback } from 'react';
-import { VjsGossipComponentProps } from './VjsGossip';
+import { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
+import { VjsReactFunctionComponent } from './VjsComponentBridgeBase';
 
-function Test({ plugin }: VjsGossipComponentProps) {
+const Test: VjsReactFunctionComponent = () => {
+  const { setPluginState } = useVjsComponentBridge();
+
   const handleClick = useCallback(() => {
-    plugin.setState({ isAnnotationMode: false });
-  }, [plugin.setState])
+    setPluginState({ isAnnotationMode: false });
+  }, [setPluginState]);
 
   return (
     <div
@@ -15,7 +18,6 @@ function Test({ plugin }: VjsGossipComponentProps) {
       }}
     >
       Overlay
-
       <button onClick={handleClick}>Close</button>
     </div>
   );

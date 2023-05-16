@@ -2,21 +2,17 @@ import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import { MdModeComment } from 'react-icons/md';
 import videojs from 'video.js';
-import GossipPlugin, { TopicMetadata } from '../main';
-import VjsBridgeComponentBase, { RenderFn, VjsComponentBridgeOptions } from './VjsComponentBridgeBase';
+import VjsBridgeComponentBase, { RenderFn, VjsReactFunctionComponent } from './VjsComponentBridgeBase';
 import VjsComponentBridgeProvider, { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
 
-type VjsGossipButtonOptions = VjsComponentBridgeOptions<GossipPlugin<TopicMetadata>>;
-
-export type VjsGossipButtonProps = VjsGossipButtonOptions;
-
-function Button(props: VjsGossipButtonProps) {
-  const { player } = useVjsComponentBridge();
+const Button: VjsReactFunctionComponent = () => {
+  const { player, setPluginState } = useVjsComponentBridge();
 
   const handleClick = useCallback(() => {
     player.pause();
-    props.plugin?.setState({ isAnnotationMode: true });
-  }, [player, props?.plugin]);
+    setPluginState({ isAnnotationMode: true });
+    console.log(setPluginState);
+  }, [player, setPluginState]);
 
   return (
     <button
@@ -39,7 +35,7 @@ function Button(props: VjsGossipButtonProps) {
   );
 }
 
-class VjsGossipButton extends VjsBridgeComponentBase<VjsGossipButtonOptions> {
+class VjsGossipButton extends VjsBridgeComponentBase {
 
   override onMount(render: RenderFn): void {
     render(
