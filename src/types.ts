@@ -34,3 +34,7 @@ export interface EventedPlugin {
 }
 
 export type Plugin<PluginState> = PluginCtor<PluginState> & EventedPlugin & StatfulPlugin<PluginState>;
+
+export type PluginLike<T = unknown> = Plugin<T>;
+
+export type PluginType<T extends PluginLike> = T extends PluginLike<infer U> ? Plugin<U> : Plugin<never>;

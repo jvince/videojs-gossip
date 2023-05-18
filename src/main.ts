@@ -3,33 +3,34 @@ import Player from 'video.js/dist/types/player';
 import './components/Button';
 import './components/VjsGossip';
 import { TopicData, TopicState } from './topicState';
-import { Identifiable, Plugin } from './types';
+import { Identifiable } from './types';
+import { getPlugin } from './utils';
 
-interface PluginState {
+interface GossipPluginState {
   isAnnotationMode: boolean;
   initialized: boolean;
 }
-
-const defaultPluginState: PluginState = {
-  isAnnotationMode: false,
-  initialized: false
-}
-
-const PluginBase = videojs.getPlugin('plugin') as Plugin<PluginState>;
 
 interface PluginOptions<TopicMetadata extends Identifiable> {
   topics?: TopicData<TopicMetadata>[]
 }
 
-class GossipPlugin<TopicMetadata extends Identifiable> extends PluginBase {
+const defaultPluginState: GossipPluginState = {
+  isAnnotationMode: false,
+  initialized: false
+}
+
+const Plugin = getPlugin<GossipPluginState>();
+
+class GossipPlugin<TopicMetadata extends Identifiable> extends Plugin {
 
   static VERSION = '0.0.1';
 
-  static defaultState: PluginState = defaultPluginState;
+  static defaultState: GossipPluginState = defaultPluginState;
 
-  private topics: TopicState<TopicMetadata> = new TopicState();
+  declare state: typeof Plugin['state'];
 
-  declare state: typeof PluginBase['state'];
+  protected topics: TopicState<TopicMetadata> = new TopicState();
 
   constructor(player: Player, options: PluginOptions<TopicMetadata>) {
     super(player, options);
@@ -73,7 +74,6 @@ export interface TopicMetadata {
 
 videojs.registerPlugin('gossip', GossipPlugin<TopicMetadata>);
 
-export { PluginBase };
+export { Plugin as PluginBase };
 
 export default GossipPlugin;
-

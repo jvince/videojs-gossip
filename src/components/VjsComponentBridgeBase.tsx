@@ -1,30 +1,35 @@
 import { kebabCase } from 'lodash';
+import { FunctionComponent } from 'react';
 import { Root, createRoot } from 'react-dom/client';
 import videojs from 'video.js';
-import Component from 'video.js/dist/types/component';
 import Player from 'video.js/dist/types/player';
-import { PluginBase } from '../main';
-import { VjsComponent } from '../types';
+import { PluginLike } from '../types';
+import { getComponent } from '../utils';
 
-const VjsComponentBase = videojs.getComponent('Component') as VjsComponent<typeof Component, Component>;
+const VjsComponent = getComponent();
 
-export interface VjsComponentBridgeOptions {
+export interface VjsComponentBridgeOptions<T extends PluginLike> {
   name: string;
   children?: any[];
   className?: string;
-  plugin: typeof PluginBase;
+  plugin: T;
 }
 
-export type Props<T = null> = T extends null ? VjsComponentBridgeOptions : VjsComponentBridgeOptions & T;
+// export type Props<T = null> = T extends null ? VjsComponentBridgeOptions : VjsComponentBridgeOptions & T;
 
-export interface VjsReactFunctionComponent<T = null, K = Props<T>> {
-  (props: K): JSX.Element;
-}
+// export interface VjsReactFunctionComponent<T = null, K = Props<T>> {
+//   (props: K): JSX.Element;
+// }
+
+export interface VjsReactFunctionComponent<Plugin extends PluginLike> extends FunctionComponent<VjsComponentBridgeOptions<Plugin>> { }
 
 export type RenderFn = Root['render'];
 export type UnmountFn = Root['unmount'];
 
-abstract class VjsBridgeComponentBase<Options extends VjsComponentBridgeOptions = VjsComponentBridgeOptions> extends VjsComponentBase {
+abstract class VjsBridgeComponentBase<
+  Plugin extends PluginLike,
+  Options extends VjsComponentBridgeOptions<Plugin> = VjsComponentBridgeOptions<Plugin>
+> extends VjsComponent {
 
   private root: Root;
 
@@ -39,7 +44,7 @@ abstract class VjsBridgeComponentBase<Options extends VjsComponentBridgeOptions 
     this.on('dispose', () => this.unmount());
   }
 
-  abstract onMount(render: RenderFn): void;
+  abstract onMount<T extends RenderFn>(render: T): void;
 
   protected componentName() {
     return this.constructor.name;
@@ -53,7 +58,7 @@ abstract class VjsBridgeComponentBase<Options extends VjsComponentBridgeOptions 
     this.onUnmount(this.root.unmount.bind(this.root));
   }
 
-  protected onUnmount(unmount: UnmountFn): void {
+  protected onUnmount<T extends UnmountFn>(unmount: T): void {
     unmount();
   }
 

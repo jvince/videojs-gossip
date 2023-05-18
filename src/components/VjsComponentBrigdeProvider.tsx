@@ -1,18 +1,17 @@
 import React, { useContext, useMemo, useRef } from 'react';
 import Player from 'video.js/dist/types/player';
 import VjsBridgeComponentBase from './VjsComponentBridgeBase';
+import { PluginLike } from '../types';
 
-type PluginStateSetter = VjsBridgeComponentBase['options_']['plugin']['setState'];
-
-export interface VjsComponentBridgeContextValue {
+export interface VjsComponentBridgeContextValue<Plugin extends PluginLike = PluginLike> {
   player: Player;
-  setPluginState: PluginStateSetter
+  setPluginState: Plugin['setState'];
 }
 
 const VjsComponentBridgeContext = React.createContext<VjsComponentBridgeContextValue>(null!);
 
 export interface VjsComponentBridgeProviderProps {
-  bridge: VjsBridgeComponentBase;
+  bridge: VjsBridgeComponentBase<PluginLike>;
   children: React.ReactNode;
 }
 

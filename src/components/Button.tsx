@@ -2,16 +2,17 @@ import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import { MdModeComment } from 'react-icons/md';
 import videojs from 'video.js';
-import VjsBridgeComponentBase, { RenderFn, VjsReactFunctionComponent } from './VjsComponentBridgeBase';
+import VjsBridgeComponentBase, { VjsReactFunctionComponent } from './VjsComponentBridgeBase';
 import VjsComponentBridgeProvider, { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
+import GossipPlugin from '../main';
+import { PluginType } from '../types';
 
-const Button: VjsReactFunctionComponent = () => {
+const Button: VjsReactFunctionComponent<PluginType<typeof GossipPlugin>> = () => {
   const { player, setPluginState } = useVjsComponentBridge();
 
   const handleClick = useCallback(() => {
     player.pause();
     setPluginState({ isAnnotationMode: true });
-    console.log(setPluginState);
   }, [player, setPluginState]);
 
   return (
@@ -35,9 +36,9 @@ const Button: VjsReactFunctionComponent = () => {
   );
 }
 
-class VjsGossipButton extends VjsBridgeComponentBase {
+class VjsGossipButton extends VjsBridgeComponentBase<PluginType<typeof GossipPlugin>> {
 
-  override onMount(render: RenderFn): void {
+  override onMount<T extends (children: React.ReactNode) => void>(render: T): void {
     render(
       <VjsComponentBridgeProvider bridge={this}>
         <Button {...this.options_} />
