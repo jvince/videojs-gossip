@@ -1,13 +1,15 @@
 import React, { useCallback } from 'react';
-import { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
+import GossipPlugin from '../main';
+import { VjsPluginType } from '../types';
 import { VjsReactFunctionComponent } from './VjsComponentBridgeBase';
+import useVjsPlugin from './useVjsPlugin';
 
 const Test: VjsReactFunctionComponent = () => {
-  const { setPluginState } = useVjsComponentBridge();
+  const { setState } = useVjsPlugin<VjsPluginType<typeof GossipPlugin>>('gossip');
 
   const handleClick = useCallback(() => {
-    setPluginState({ isAnnotationMode: false });
-  }, [setPluginState]);
+    setState({ isAnnotationMode: false });
+  }, [setState]);
 
   return (
     <div

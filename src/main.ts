@@ -1,38 +1,39 @@
-import videojs from 'video.js';
-import Player from 'video.js/dist/types/player';
+import videojs, { VjsPlayer } from 'video.js';
 import './components/Button';
 import './components/VjsGossip';
 import { TopicData, TopicState } from './topicState';
-import { Identifiable, Plugin } from './types';
-
-interface PluginState {
+import { Identifiable } from './types';
+import { getPlugin } from './utils';
+interface GossipPluginState {
   isAnnotationMode: boolean;
   initialized: boolean;
 }
 
-const defaultPluginState: PluginState = {
+const defaultPluginState: GossipPluginState = {
   isAnnotationMode: false,
   initialized: false
 }
 
-const PluginBase = videojs.getPlugin('plugin') as Plugin<PluginState>;
+const Plugin = getPlugin<GossipPluginState>();
 
 interface PluginOptions<TopicMetadata extends Identifiable> {
   topics?: TopicData<TopicMetadata>[]
 }
 
-class GossipPlugin<TopicMetadata extends Identifiable> extends PluginBase {
+class GossipPlugin<TopicMetadata extends Identifiable> extends Plugin {
 
   static VERSION = '0.0.1';
 
-  static defaultState: PluginState = defaultPluginState;
+  static defaultState: GossipPluginState = defaultPluginState;
 
   private topics: TopicState<TopicMetadata> = new TopicState();
 
-  declare state: typeof PluginBase['state'];
+  declare state: typeof Plugin['state'];
 
-  constructor(player: Player, options: PluginOptions<TopicMetadata>) {
+  constructor(player: VjsPlayer, options: PluginOptions<TopicMetadata>) {
     super(player, options);
+
+    this.setState = this.setState.bind(this);
 
     if (options.topics) {
       this.topics.populate(options.topics);
@@ -72,8 +73,6 @@ export interface TopicMetadata {
 }
 
 videojs.registerPlugin('gossip', GossipPlugin<TopicMetadata>);
-
-export { PluginBase };
 
 export default GossipPlugin;
 

@@ -2,17 +2,20 @@ import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import { MdModeComment } from 'react-icons/md';
 import videojs from 'video.js';
+import GossipPlugin from '../main';
+import { VjsPluginType } from '../types';
 import VjsBridgeComponentBase, { RenderFn, VjsReactFunctionComponent } from './VjsComponentBridgeBase';
 import VjsComponentBridgeProvider, { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
+import useVjsPlugin from './useVjsPlugin';
 
 const Button: VjsReactFunctionComponent = () => {
-  const { player, setPluginState } = useVjsComponentBridge();
+  const { player } = useVjsComponentBridge();
+  const { setState } = useVjsPlugin<VjsPluginType<typeof GossipPlugin>>('gossip');
 
   const handleClick = useCallback(() => {
     player.pause();
-    setPluginState({ isAnnotationMode: true });
-    console.log(setPluginState);
-  }, [player, setPluginState]);
+    setState({ isAnnotationMode: true });
+  }, [player, setState]);
 
   return (
     <button

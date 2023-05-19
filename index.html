@@ -32,6 +32,7 @@
 
     (function (window, videojs) {
       var player = window.examplePlayer = videojs('video');
+      player.qualityLevels();
       console.log(`has plugin: ${player.hasPlugin('gossip')}`);
       var plugin = window.gossip = player.gossip({
         topics: [

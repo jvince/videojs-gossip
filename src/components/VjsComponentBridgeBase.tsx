@@ -1,9 +1,8 @@
 import { kebabCase } from 'lodash';
+import { FunctionComponent } from 'react';
 import { Root, createRoot } from 'react-dom/client';
-import videojs from 'video.js';
+import videojs, { VjsPlayer } from 'video.js';
 import Component from 'video.js/dist/types/component';
-import Player from 'video.js/dist/types/player';
-import { PluginBase } from '../main';
 import { VjsComponent } from '../types';
 
 const VjsComponentBase = videojs.getComponent('Component') as VjsComponent<typeof Component, Component>;
@@ -12,14 +11,11 @@ export interface VjsComponentBridgeOptions {
   name: string;
   children?: any[];
   className?: string;
-  plugin: typeof PluginBase;
 }
 
-export type Props<T = null> = T extends null ? VjsComponentBridgeOptions : VjsComponentBridgeOptions & T;
+export type VjsReactComponentProps<T = null> = T extends null ? VjsComponentBridgeOptions : VjsComponentBridgeOptions & T;
 
-export interface VjsReactFunctionComponent<T = null, K = Props<T>> {
-  (props: K): JSX.Element;
-}
+export interface VjsReactFunctionComponent<T = null> extends FunctionComponent<VjsReactComponentProps<T>> {}
 
 export type RenderFn = Root['render'];
 export type UnmountFn = Root['unmount'];
@@ -30,7 +26,11 @@ abstract class VjsBridgeComponentBase<Options extends VjsComponentBridgeOptions 
 
   declare options_: Options;
 
-  constructor(player: Player, options?: Options) {
+  declare player_: VjsPlayer;
+
+  declare player: () => VjsPlayer;
+
+  constructor(player: VjsPlayer, options?: Options) {
     super(player, options);
 
     this.root = createRoot(this.el());
