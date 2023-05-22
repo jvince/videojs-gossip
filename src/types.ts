@@ -37,6 +37,6 @@ export interface EventedPlugin {
 
 export type VjsPlugin<PluginState> = PluginCtor<PluginState> & EventedPlugin & StatfulPlugin<PluginState>;
 
-export type VjsPluginLike = VjsPlugin<any>;
+export type VjsPluginLike = VjsPlugin<any> | VideojsPlugin;
 
 export type VjsPluginType<T> = T extends VjsPlugin<infer U> ? VjsPlugin<U> : VjsPlugin<unknown>;

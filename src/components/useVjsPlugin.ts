@@ -4,6 +4,7 @@ import { useVjsComponentBridge } from './VjsComponentBrigdeProvider';
 
 function useVjsPlugin<T extends VjsPluginLike>(pluginName: string) {
   const { player } = useVjsComponentBridge();
+
   return useMemo(() => {
     if (player.usingPlugin(pluginName)) {
       return player[pluginName]() as T;
